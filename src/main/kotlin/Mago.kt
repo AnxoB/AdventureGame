@@ -1,8 +1,9 @@
 class Mago(
-    name: String,
-    health: Int = 5,
-    attack: Int = 4,
-    defense: Int = 3,
-    speed: Int = 6,
-    mana: Int = 10
-) : Personaje(name, health, attack, defense, speed, mana)
+    nombre: String,
+    vida: Int = 5,
+    ataque: Int = 4,
+    defensa: Int = 3,
+    velocidad: Int = 6,
+    mana: Int = 10,
+    arma: Arma = Arma("Báculo de madera", bonusAtaque = 1, bonusMana = 1)
+) : Personaje(nombre, vida, ataque, defensa, velocidad, mana, arma)

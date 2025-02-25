@@ -1,17 +1,27 @@
 open class Personaje(
-    val name: String,
-    var health: Int,
-    var attack: Int,
-    var defense: Int,
-    var speed: Int,
-    var mana: Int
+    val nombre: String,
+    var vida: Int,
+    var ataque: Int,
+    var defensa: Int,
+    var velocidad: Int,
+    var mana: Int,
+    val arma: Arma
 ) {
-    fun displayStats() {
-        println("Name: $name")
-        println("Health: $health")
-        println("Attack: $attack")
-        println("Defense: $defense")
-        println("Speed: $speed")
-        println("Mana: $mana")
+    init {
+        vida += arma.bonusVida
+        ataque += arma.bonusAtaque
+        defensa += arma.bonusDefensa
+        velocidad += arma.bonusVelocidad
+        mana += arma.bonusMana
+    }
+
+    fun mostrarEstadisticas() {
+        println("Nombre: $nombre")
+        println("Vida: $vida")
+        println("Ataque: $ataque")
+        println("Defensa: $defensa")
+        println("Velocidad: $velocidad")
+        println("Maná: $mana")
+        println("Arma: ${arma.nombre}")
     }
 }

@@ -1,8 +1,9 @@
-class Rogue(
-    name: String,
-    health: Int = 6,
-    attack: Int = 9,
-    defense: Int = 3,
-    speed: Int = 10,
-    mana: Int = 2
-) : Personaje(name, health, attack, defense, speed, mana)
+class Picaro(
+    nombre: String,
+    vida: Int = 6,
+    ataque: Int = 9,
+    defensa: Int = 3,
+    velocidad: Int = 10,
+    mana: Int = 2,
+    arma: Arma = Arma("Daga de madera", bonusVelocidad = 2)
+) : Personaje(nombre, vida, ataque, defensa, velocidad, mana, arma)
