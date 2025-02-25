@@ -46,25 +46,30 @@ val eventoCofreOxidado = Evento(
     descripcion = "Encuentras un viejo cofre en el bosque cubierto de musgo y óxido. Parece frágil, pero podría contener algo útil.",
     opciones = listOf(
         Opcion("Abrirlo con cuidado") { personaje ->
-            when (personaje) {
-                is Caballero -> {
-                    println("Has encontrado una Espada de Madera Mejorada (+2 Ataque +2 Defensa).")
-                    personaje.cambiarArma(Arma("Espada de Madera Mejorada", bonusAtaque = 2, bonusDefensa = 2))
+            if (personaje.velocidad >= 6){
+                when (personaje) {
+                    is Caballero -> {
+                        println("Has encontrado una Espada de Madera Mejorada (+2 Ataque +2 Defensa).")
+                        personaje.cambiarArma(Arma("Espada de Madera Mejorada", bonusAtaque = 2, bonusDefensa = 2))
+                    }
+                    is Arquero -> {
+                        println("Has encontrado un Arco Tallado (+3 Ataque +1 Velocidad).")
+                        personaje.cambiarArma(Arma("Arco Tallado", bonusAtaque = 3, bonusVelocidad = 1))
+                    }
+                    is Mago -> {
+                        println("Has encontrado un Bastón de Roble (+2 Ataque, +2 Mana).")
+                        personaje.cambiarArma(Arma("Bastón de Roble", bonusAtaque = 2, bonusMana = 2))
+                    }
+                    is Picaro -> {
+                        println("Has encontrado unas Dagas de Madera (+1 Ataque +3 Velocidad).")
+                        personaje.cambiarArma(Arma("Dagas de Madera", bonusAtaque = 1, bonusVelocidad = 3))
+                    }
+                    else -> println("No encuentras nada útil para tu clase.")
                 }
-                is Arquero -> {
-                    println("Has encontrado un Arco Tallado (+3 Ataque +1 Velocidad).")
-                    personaje.cambiarArma(Arma("Arco Tallado", bonusAtaque = 3, bonusVelocidad = 1))
-                }
-                is Mago -> {
-                    println("Has encontrado un Bastón de Roble (+2 Ataque, +2 Mana).")
-                    personaje.cambiarArma(Arma("Bastón de Roble", bonusAtaque = 2, bonusMana = 2))
-                }
-                is Picaro -> {
-                    println("Has encontrado unas Dagas de Madera (+1 Ataque +3 Velocidad).")
-                    personaje.cambiarArma(Arma("Dagas de Madera", bonusAtaque = 1, bonusVelocidad = 3))
-                }
-                else -> println("No encuentras nada útil para tu clase.")
+            } else {
+                println("No has encontrado nada útil en el cofre")
             }
+
         },
         Opcion("Forzarlo") { personaje ->
             println("¡Se activa una trampa! Pierdes 3 puntos de vida.")
