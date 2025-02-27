@@ -65,6 +65,7 @@ val eventoCofreOxidado = Evento(
                         personaje.cambiarArma(Arma("Dagas de Madera", bonusAtaque = 1, bonusVelocidad = 3))
                     }
                     else -> println("No encuentras nada útil para tu clase.")
+
                 }
             } else {
                 println("No has encontrado nada útil en el cofre")

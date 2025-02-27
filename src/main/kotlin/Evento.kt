@@ -10,7 +10,9 @@ class Evento(
 ) {
     fun mostrarEvento() {
         println("$titulo")
+        pausa(1000)
         println("$descripcion")
+        pausa(1000)
         opciones.forEachIndexed { index, opcion ->
             println("${index + 1}. ${opcion.descripcion}")
         }
