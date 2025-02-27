@@ -22,8 +22,8 @@ val eventoMercaderSospechoso = Evento(
             println("Sigues tu camino sin comprar nada.")
         },
         Opcion("Amenazarlo") { personaje ->
-            if (Random.nextBoolean()) {
-                println("El mercader te da la poción gratis.")
+            if (personaje.ataque>10) {
+                println("El mercader se siente amenazado y te da la poción gratis.")
                 if (Random.nextBoolean()) {
                     println("Has recibido una Poción de Vida (+10 HP)")
                     personaje.vida += 2
@@ -81,7 +81,56 @@ val eventoCofreOxidado = Evento(
         }
     )
 )
+val posadaBrisavento = Evento (
+    titulo = "La Posada de Brisavento",
+    descripcion = "Caminando llegas a Brisavento, en la región de Los Dominios del Céfiro, un territorio de extensas llanuras, colinas ondulantes y cañones esculpidos por el viento. Se dice que los vientos que cruzan estas tierras traen consigo susurros del pasado y que algunos viajeros han escuchado voces en la brisa."+
+    "Brisavento es conocida por su clima fresco, su mercado ambulante y su posada, El Último Hogar, donde viajeros y mercaderes se reúnen antes de continuar sus viajes.",
+    opciones = listOf(
+        Opcion("Hablar con el posadero") {
+            println("Tenemos habitaciones disponibles a 5 monedas")
+            Opcion("Aceptas y pagas las 5 monedas"){ personaje ->
+                println("Descansas y tu vida aumenta en 5 puntos")
+                personaje.monedas -= 5
+                personaje.vida += 5
+            }
+            Opcion("Negociar"){ personaje ->
+                if (personaje.mana > 10){
+                    println("Consigues dormir gratis")
+                    personaje.vida += 5
+                } else{
+                    println("Fallas en la negociación y aceptas dormir por 5 monedas")
+                    personaje.monedas -= 5
+                    personaje.vida += 5
+                }
+            }
+            Opcion("Rechazar y volver al salon"){ personaje ->
+                println("Descansas y tu vida aumenta en 5 puntos")
+                personaje.vida += 5
+            }
+        },
+        Opcion("Ir donde el mercader misterioso"){
+            println("Un hombre con capa oscura vende objetos inusuales")
+            Opcion("Robar al mercader"){ personaje ->
+                if (personaje is Picaro || personaje.velocidad>10){
+                    println("Robas una poción de vida y 5 monedas")
+                    personaje.monedas += 5
+                    //Falta pocion vida
+                } else {
+                    println("Fallas el robo y el mercader te desafía a un duelo")
+                    val mercader = Enemigo("Mercader Misterioso", vida = 25, ataque = 8, defensa = 3, velocidad = 6)
+                    val batalla = Batalla(personaje, mercader)
+                    batalla.iniciar()
+                    println("Hola")
+                }
+            }
+        }
 
-val eventosFaciles = mutableListOf(eventoMercaderSospechoso, eventoCofreOxidado)
+
+    )
+
+
+)
+
+val eventosFaciles = mutableListOf(eventoMercaderSospechoso, eventoCofreOxidado, posadaBrisavento)
 val eventosMedios = mutableListOf<Evento>()
 val eventosDificiles = mutableListOf<Evento>()
