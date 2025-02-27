@@ -83,46 +83,176 @@ val eventoCofreOxidado = Evento(
 )
 val posadaBrisavento = Evento (
     titulo = "La Posada de Brisavento",
-    descripcion = "Caminando llegas a Brisavento, en la región de Los Dominios del Céfiro, un territorio de extensas llanuras, colinas ondulantes y cañones esculpidos por el viento. Se dice que los vientos que cruzan estas tierras traen consigo susurros del pasado y que algunos viajeros han escuchado voces en la brisa."+
+    descripcion = "Caminando llegas a Brisavento, en la región de Los Dominios del Céfiro, un territorio de extensas llanuras, colinas ondulantes y cañones esculpidos por el viento. Se dice que los vientos que cruzan estas tierras traen consigo susurros del pasado y que algunos viajeros han escuchado voces en la brisa.\n "+
     "Brisavento es conocida por su clima fresco, su mercado ambulante y su posada, El Último Hogar, donde viajeros y mercaderes se reúnen antes de continuar sus viajes.",
     opciones = listOf(
-        Opcion("Hablar con el posadero") {
+        Opcion("Hablar con el posadero") { personaje ->
             println("Tenemos habitaciones disponibles a 5 monedas")
-            Opcion("Aceptas y pagas las 5 monedas"){ personaje ->
-                println("Descansas y tu vida aumenta en 5 puntos")
-                personaje.monedas -= 5
-                personaje.vida += 5
-            }
-            Opcion("Negociar"){ personaje ->
-                if (personaje.mana > 10){
-                    println("Consigues dormir gratis")
-                    personaje.vida += 5
-                } else{
-                    println("Fallas en la negociación y aceptas dormir por 5 monedas")
-                    personaje.monedas -= 5
-                    personaje.vida += 5
+            fun opcionesPosadero(personaje: Personaje) {
+                val subOpciones = listOf(
+                    Opcion("Aceptar y pagar las 5 monedas") {
+                        println("Descansas y tu vida aumenta en 5 puntos")
+                        personaje.monedas -= 5
+                        personaje.vida += 5
+                    },
+                    Opcion("Negociar") {
+                        if (personaje.mana > 10) {
+                            println("Consigues dormir gratis")
+                            personaje.vida += 5
+                        } else {
+                            println("Fallas en la negociación y aceptas dormir por 5 monedas")
+                            personaje.monedas -= 5
+                            personaje.vida += 5
+                        }
+                    },
+                    Opcion("Rechazar e irte de la posada") {
+                        println("Decides no alquilar una habitación y abandonas la posada.")
+                    }
+                )
+                subOpciones.forEachIndexed { index, opcion ->
+                    println("${index + 1}. ${opcion.descripcion}")
                 }
+                println("Selecciona una opción:")
+                val opcionSeleccionada = readLine()?.toIntOrNull() ?: 1
+                subOpciones[opcionSeleccionada - 1].accion(personaje)
             }
-            Opcion("Rechazar y volver al salon"){ personaje ->
-                println("Descansas y tu vida aumenta en 5 puntos")
-                personaje.vida += 5
-            }
+            opcionesPosadero(personaje)
         },
-        Opcion("Ir donde el mercader misterioso"){
+        Opcion("Ir donde el mercader misterioso"){ personaje ->
             println("Un hombre con capa oscura vende objetos inusuales")
-            Opcion("Robar al mercader"){ personaje ->
-                if (personaje is Picaro || personaje.velocidad>10){
-                    println("Robas una poción de vida y 5 monedas")
-                    personaje.monedas += 5
-                    //Falta pocion vida
-                } else {
-                    println("Fallas el robo y el mercader te desafía a un duelo")
-                    val mercader = Enemigo("Mercader Misterioso", vida = 25, ataque = 8, defensa = 3, velocidad = 6)
-                    val batalla = Batalla(personaje, mercader)
-                    batalla.iniciar()
-                    println("Hola")
+            fun opcionesMercaderMisterioso(personaje: Personaje) {
+                val subOpciones = listOf(
+                    Opcion("El mercader te ofrece un amuleto de la suerte"){
+                        //Falta
+                    },
+                    Opcion("Robar al mercader") {
+                        if (personaje is Picaro || personaje.velocidad > 10) {
+                            println("Robas una poción de vida y 5 monedas")
+                            personaje.monedas += 5
+                            // Aquí falta la lógica para añadir la poción de vida
+                        } else {
+                            println("Fallas el robo y el mercader te desafía a un duelo")
+                            val mercader = Enemigo("Mercader Misterioso", vida = 25, ataque = 8, defensa = 3, velocidad = 6)
+                            val batalla = Batalla(personaje, mercader)
+                            batalla.iniciar()
+                            personaje.experiencia += 2
+                            personaje.monedas += 2
+                            println("Derrotas al mercader, consigues 2 de experiencia y 2 monedas")
+                        }
+                    },
+                    Opcion("Ignorarlo y seguir explorando"){
+                        println("Dejas al mercader con sus chanchullos y abandonas la posada")
+                    }
+                )
+                subOpciones.forEachIndexed { index, opcion ->
+                    println("${index + 1}. ${opcion.descripcion}")
                 }
+                println("Selecciona una opción:")
+                val opcionSeleccionada = readLine()?.toIntOrNull() ?: 1
+                subOpciones[opcionSeleccionada - 1].accion(personaje)
             }
+            opcionesMercaderMisterioso(personaje)
+        },
+        Opcion("Sentarte con unos aventureros"){ personaje ->
+            println("Te sientas a charlar con un grupo variopinto de aventureros")
+            fun opcionesCharla(personaje: Personaje){
+                val subOpciones = listOf(
+                    Opcion("Escuchar sus historias"){
+                        //Falta
+                    },
+                    Opcion("Desafiar a uno a un pulso") {
+                        println("Desafías a x, el mas fuerte a un pulso. Su aspecto es muy fuerte, pero te arriesgas a realizar una apuesta")
+                        if (personaje.ataque>8){
+                            println("Ganas el pulso sin apenas esfuerzo. X queda sorprendido y ganas la apuesta")
+                            println("Ganas 3 monedas y 2 de experiencia")
+                            personaje.monedas += 3
+                            personaje.experiencia += 2
+                        }
+                    },
+                    Opcion("Pasa la noche y bebe junto a ellos (Paga 3 monedas)"){
+                        println("Pasas la noche con los aventureros, bebes, cantas, bailas... Y al día siguiente no recuerdas ni que has hecho")
+                        println("Ganas 2 de vida, pierdes 3 monedas y ganas 2 de experiencia")
+                        personaje.monedas -= 3
+                        personaje.vida += 2
+                        personaje.experiencia += 2
+                    }
+                )
+                subOpciones.forEachIndexed { index, opcion ->
+                    println("${index + 1}. ${opcion.descripcion}")
+                }
+                println("Selecciona una opción:")
+                val opcionSeleccionada = readLine()?.toIntOrNull() ?: 1
+                subOpciones[opcionSeleccionada - 1].accion(personaje)
+            }
+            opcionesCharla(personaje)
+        },
+        Opcion("Subir a las habitaciones a colarte en la posada"){ personaje ->
+            println("Subes al pasillo de las habitaciones y te encuentras con 2 puertas")
+            fun opcionesPuerta(personaje: Personaje){
+                val subOpciones = listOf(
+                    Opcion("Colarte en la primera puerta (Clase pícaro o velocidad > ?)"){
+                        if (personaje is Picaro || personaje.velocidad > 10){
+                            println("Te cuelas en la habitación exitosamente. No hay nadie, asi que cierras la puerta y aprovechas para descansar")
+                            println("Ganas 2 de vida y 2 de experiencia")
+                            personaje.vida += 2
+                            personaje.experiencia += 2
+                        } else{
+                            println("No eres capaz de abrir la puerta y el tabernero te descubre. Te echan de la posada")
+                            println("Pierdes 2 de vida")
+                            personaje.vida -= 2
+                        }
+                    },
+                    Opcion("Colarte en la segunda puerta (Clase pícaro o velocidad > ?)") {
+                        if (personaje is Picaro || personaje.velocidad > 10){
+                            when(personaje){
+                                is Picaro -> {
+                                    println("Te encuentras con un picaro durmiendo y ves una reluciente daga de hierro a su lado")
+                                    println("Consigues una daga de hierro (3 de ataque y 3 de velocidad) y 2 de experiencia")
+                                    personaje.cambiarArma(Arma("Dagas de hierro", bonusAtaque = 3, bonusVelocidad = 3))
+                                    personaje.experiencia += 2
+                                }
+                                is Mago -> {
+                                    println("Te encuentras con un mago durmiendo y ves un reluciente báculo de hierro a su lado")
+                                    println("Consigues una báculo de hierro (3 de ataque y 3 de maná) y 2 de experiencia")
+                                    personaje.cambiarArma(Arma("Báculo de hierro", bonusAtaque = 3, bonusMana = 3))
+                                    personaje.experiencia += 2
+                                }
+                                is Caballero -> {
+                                    println("Te encuentras con un caballero durmiendo y ves una reluciente espada de hierro a su lado")
+                                    println("Consigues una espada de hierro (3 de ataque y 3 de defensa) y 2 de experiencia")
+                                    personaje.cambiarArma(Arma("Espada de hierro", bonusAtaque = 3, bonusDefensa = 3))
+                                    personaje.experiencia += 2
+                                }
+                                is Arquero -> {
+                                    println("Te encuentras con un arquero durmiendo y ves una reluciente arco de hierro a su lado")
+                                    println("Consigues un arco de hierro (3 de ataque y 3 de velocidad) y 2 de experiencia")
+                                    personaje.cambiarArma(Arma("Dagas de hierro", bonusAtaque = 3, bonusVelocidad = 3))
+                                    personaje.experiencia += 2
+                                }
+
+                            }
+                        } else{
+                            println("Entras en la habitación pero haces tanto ruido con la puerta, que despiertas a un caballero que hay durmiendo")
+                            val caballero = Enemigo("Caballero Somnoliento", vida = 25, ataque = 10, defensa = 8, velocidad = 4)
+                            val batalla = Batalla(personaje, caballero)
+                            batalla.iniciar()
+                            println("Consigues resistir lo ataques del caballero y huyes de la posada")
+                            println("Ganas 2 de experiencia")
+                            personaje.experiencia += 2
+                        }
+                    },
+                    Opcion("Irse de la posada"){
+                        println("Desechas la idea de colarte en la posada y sigues tu camino")
+                    }
+                )
+                subOpciones.forEachIndexed { index, opcion ->
+                    println("${index + 1}. ${opcion.descripcion}")
+                }
+                println("Selecciona una opción:")
+                val opcionSeleccionada = readLine()?.toIntOrNull() ?: 1
+                subOpciones[opcionSeleccionada - 1].accion(personaje)
+            }
+            opcionesPuerta(personaje)
         }
 
 
@@ -130,6 +260,7 @@ val posadaBrisavento = Evento (
 
 
 )
+
 
 val eventosFaciles = mutableListOf(eventoMercaderSospechoso, eventoCofreOxidado, posadaBrisavento)
 val eventosMedios = mutableListOf<Evento>()
