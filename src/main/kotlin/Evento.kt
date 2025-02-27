@@ -15,6 +15,7 @@ class Evento(
         pausa(1000)
         opciones.forEachIndexed { index, opcion ->
             println("${index + 1}. ${opcion.descripcion}")
+            pausa(1000)
         }
     }
 

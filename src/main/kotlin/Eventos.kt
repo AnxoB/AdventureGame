@@ -9,10 +9,10 @@ val eventoMercaderSospechoso = Evento(
                 personaje.monedas -= 5
                 if (Random.nextBoolean()) {
                     println("Has recibido una Poción de Vida (+10 HP)")
-                    personaje.vida += 10
+                    personaje.vida += 2
                 } else {
                     println("Has recibido una Poción Envenenada (-5 HP)")
-                    personaje.vida -= 5
+                    personaje.vida -= 2
                 }
             } else {
                 println("No tienes suficientes monedas")
@@ -26,15 +26,15 @@ val eventoMercaderSospechoso = Evento(
                 println("El mercader te da la poción gratis.")
                 if (Random.nextBoolean()) {
                     println("Has recibido una Poción de Vida (+10 HP)")
-                    personaje.vida += 10
+                    personaje.vida += 2
                 } else {
                     println("Has recibido una Poción Envenenada (-5 HP)")
-                    personaje.vida -= 5
+                    personaje.vida -= 2
                 }
             } else {
-                println("Un guardia sorpresa te ataca (Combate).")
-                val guardia = Enemigo("Guardia", vida = 20, ataque = 5, defensa = 3, velocidad = 4)
-                val batalla = Batalla(personaje, guardia)
+                println("El mercader no se siente amenazado y te ataca")
+                val mercader = Enemigo("Mercader", vida = 20, ataque = 5, defensa = 3, velocidad = 4)
+                val batalla = Batalla(personaje, mercader)
                 batalla.iniciar()
             }
         }
