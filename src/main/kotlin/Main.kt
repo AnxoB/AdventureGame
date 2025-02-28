@@ -54,4 +54,7 @@ fun main() {
         }
     }
 
+    println("Presiona Enter para salir...")
+    readln()
+
 }

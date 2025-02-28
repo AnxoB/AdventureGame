@@ -1,5 +1,3 @@
-import kotlinx.coroutines.processNextEventInCurrentThread
-import org.jetbrains.skia.Region
 import kotlin.random.Random
 
 val eventoMercaderSospechoso = Evento(
@@ -166,6 +164,71 @@ val posadaBrisavento = Evento (
                         "—Cuando veas tres caminos tallados en la roca, sabrás que estás cerca. Pero el verdadero desafío empieza después. El santuario no se abre a cualquiera… tienes que demostrar que entiendes el lenguaje del viento.")
                         println("Encandilado por las posibles recompensas que el santuario pueda tener en su interior, te despides de los viajeros y te lanzas en su busca")
                         println("Después de días de viaje, llegas a una zona donde el viento parece hablarte con palabras incomprensibles. Frente a ti, hay tres caminos, cada uno con señales talladas en la roca.")
+
+                        fun recompensaSanturario(personaje: Personaje){
+                            println("El altar se abre y revela un arma que parece que porta el poder del viento")
+                            when (personaje) {
+                                is Caballero -> {
+                                    println("Has encontrado una Espada de Viento (+5 Ataque +5 Defensa) y ganas 5 de experiencia")
+                                    personaje.cambiarArma(Arma("Espada de Viento", bonusAtaque = 5, bonusDefensa = 5))
+                                    personaje.experiencia+=5
+                                }
+                                is Arquero -> {
+                                    println("Has encontrado un Arco de Viento (+5 Ataque +5 Velocidad) y ganas 5 de experiencia")
+                                    personaje.cambiarArma(Arma("Arco de Viento", bonusAtaque = 5, bonusVelocidad = 5))
+                                    personaje.experiencia+=5
+                                }
+                                is Mago -> {
+                                    println("Has encontrado un Bastón de Viento (+5 Ataque, +5 Mana) y ganas 5 de experiencia")
+                                    personaje.cambiarArma(Arma("Bastón de Viento", bonusAtaque = 5, bonusMana = 5))
+                                    personaje.experiencia+=5
+                                }
+                                is Picaro -> {
+                                    println("Has encontrado unas Dagas de Viento (+5 Ataque +5 Velocidad) y ganas 5 de experiencia")
+                                    personaje.cambiarArma(Arma("Dagas de Viento", bonusAtaque = 5, bonusVelocidad = 5))
+                                    personaje.experiencia+=5
+                                }
+                                else -> println("No encuentras nada útil para tu clase.")
+
+                            }
+                        }
+                        fun opcionesAltar(personaje: Personaje){
+                            val subOpciones = listOf(
+                                Opcion("Soplar sobre el altar (Mago o maná > ?)"){
+                                    if (personaje is Mago || personaje.mana > 15){
+                                        recompensaSanturario(personaje)
+                                    } else {
+                                        println("No ocurre nada. Te vas por donde has venido ya que no eres capaz de activar el altar")
+                                    }
+                                },
+                                Opcion("Leer la inscripción"){
+                                    println("No me ves, pero me sientes, viajo lejos sin detenerme.\nSilbo historias en las cumbres, y en tormentas suelo alzarte.\n¿Qué soy?")
+                                    println("Contagiado por una extraña sensación, te decides a pronunciar una palabra en alto:")
+                                    val solucion = readln()
+                                    if (solucion.lowercase()=="viento" || solucion.lowercase()=="el viento" || solucion.lowercase()=="elviento"){
+                                        recompensaSanturario(personaje)
+                                    } else{
+                                        println("Tan pronto pronuncias $solucion, una gran ráfaga de viento te empuja lejos del santuario")
+                                    }
+                                },
+                                Opcion("Forzar el altar (ataque > ?)"){
+                                    if (personaje.ataque > 20){
+                                        recompensaSanturario(personaje)
+                                    } else {
+                                        println("No consigues activar el altar y activas una trampa")
+                                        println("Pierdes 2 de vida")
+                                        personaje.vida -= 2
+                                    }
+                                },
+                            )
+                            subOpciones.forEachIndexed { index, opcion ->
+                                println("${index + 1}. ${opcion.descripcion}")
+                            }
+                            println("Selecciona una opción:")
+                            val opcionSeleccionada = readLine()?.toIntOrNull() ?: 1
+                            subOpciones[opcionSeleccionada - 1].accion(personaje)
+                        }
+
                         fun opcionesSantuario(personaje: Personaje){
                             val subOpciones = listOf(
                                 Opcion("Sendero Angosto entre acantilados (Velocidad > ?)"){
@@ -173,74 +236,14 @@ val posadaBrisavento = Evento (
                                     if (personaje.velocidad>15){
                                         println("Llegas al otro lado sin problemas")
                                         println("Al final del camino, descubres un antiguo altar de piedra con una inscripción:")
-                                        fun recompensaSanturario(personaje: Personaje){
-                                            println("El altar se abre y revela un arma que parece que porta el poder del viento")
-                                            when (personaje) {
-                                                is Caballero -> {
-                                                    println("Has encontrado una Espada de Viento (+5 Ataque +5 Defensa) y ganas 5 de experiencia")
-                                                    personaje.cambiarArma(Arma("Espada de Viento", bonusAtaque = 5, bonusDefensa = 5))
-                                                    personaje.experiencia+=5
-                                                }
-                                                is Arquero -> {
-                                                    println("Has encontrado un Arco de Viento (+5 Ataque +5 Velocidad) y ganas 5 de experiencia")
-                                                    personaje.cambiarArma(Arma("Arco de Viento", bonusAtaque = 5, bonusVelocidad = 5))
-                                                    personaje.experiencia+=5
-                                                }
-                                                is Mago -> {
-                                                    println("Has encontrado un Bastón de Viento (+5 Ataque, +5 Mana) y ganas 5 de experiencia")
-                                                    personaje.cambiarArma(Arma("Bastón de Viento", bonusAtaque = 5, bonusMana = 5))
-                                                    personaje.experiencia+=5
-                                                }
-                                                is Picaro -> {
-                                                    println("Has encontrado unas Dagas de Viento (+5 Ataque +5 Velocidad) y ganas 5 de experiencia")
-                                                    personaje.cambiarArma(Arma("Dagas de Viento", bonusAtaque = 5, bonusVelocidad = 5))
-                                                    personaje.experiencia+=5
-                                                }
-                                                else -> println("No encuentras nada útil para tu clase.")
 
-                                            }
-                                        }
-                                        fun opcionesAltar(personaje: Personaje){
-                                            val subOpciones = listOf(
-                                                Opcion("Soplar sobre el altar (Mago o maná > ?)"){
-                                                    if (personaje is Mago || personaje.mana > 15){
-                                                        recompensaSanturario(personaje)
-                                                    } else {
-                                                        println("No ocurre nada. Te vas por donde has venido ya que no eres capaz de activar el altar")
-                                                    }
-                                                },
-                                                Opcion("Leer la inscripción"){
-                                                    println("No me ves, pero me sientes, viajo lejos sin detenerme.\nSilbo historias en las cumbres, y en tormentas suelo alzarte.\n¿Qué soy?")
-                                                    println("Contagiado por una extraña sensación, te decides a pronunciar una palabra en alto:")
-                                                    val solucion = readln()
-                                                    if (solucion.lowercase()=="viento" || solucion.lowercase()=="el viento" || solucion.lowercase()=="elviento"){
-                                                        recompensaSanturario(personaje)
-                                                    } else{
-                                                        println("Tan pronto pronuncias $solucion, una gran ráfaga de viento te empuja lejos del santuario")
-                                                    }
-                                                },
-                                                Opcion("Forzar el altar (ataque > ?)"){
-                                                    if (personaje.ataque > 20){
-                                                        recompensaSanturario(personaje)
-                                                    } else {
-                                                        println("No consigues activar el altar y activas una trampa")
-                                                        println("Pierdes 2 de vida")
-                                                        personaje.vida -= 2
-                                                    }
-                                                },
-                                            )
-                                            subOpciones.forEachIndexed { index, opcion ->
-                                                println("${index + 1}. ${opcion.descripcion}")
-                                            }
-                                            println("Selecciona una opción:")
-                                            val opcionSeleccionada = readLine()?.toIntOrNull() ?: 1
-                                            subOpciones[opcionSeleccionada - 1].accion(personaje)
-                                        }
                                         opcionesAltar(personaje)
                                     } else{
                                         println("Un fuerte golpe de viento te hace perder el equilibrio, aunque consigues avanzar")
                                         println("Pierdes 5 de vida")
                                         personaje.vida -= 5
+
+                                        opcionesAltar(personaje)
                                     }
                                 },
                                 Opcion("Cueva oscura con extrañas corrientes de aire (Maná > ?)"){
