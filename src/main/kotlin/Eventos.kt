@@ -1,3 +1,5 @@
+import kotlinx.coroutines.processNextEventInCurrentThread
+import org.jetbrains.skia.Region
 import kotlin.random.Random
 
 val eventoMercaderSospechoso = Evento(
@@ -158,7 +160,136 @@ val posadaBrisavento = Evento (
             fun opcionesCharla(personaje: Personaje){
                 val subOpciones = listOf(
                     Opcion("Escuchar sus historias"){
-                        //Falta
+                        println("Uno de los viajeros comenta el rumor del Santuario de los Susurros, construido por una orden de monjes que creían que el viento era un ser viviente, un guardián de secretos antiguos. Durante siglos, protegieron algo en su interior… algo lo bastante valioso como para que nunca revelaran su ubicación.\n"+
+                        "Pero el tiempo se llevó a los monjes, y el santuario se perdió. Te cuenta que una vez estuvo allí, pero que no fue capaz de llegar al final de tesoro.\n"+
+                        "-Sigue el camino al Cañón de las Mil Voces, donde los vientos silban como si estuvieran contando historias olvidadas. Cuando llegues, espera al anochecer. En las noches adecuadas, el viento cambia… no es un simple murmullo, sino una especie de canto.\n"+
+                        "—Cuando veas tres caminos tallados en la roca, sabrás que estás cerca. Pero el verdadero desafío empieza después. El santuario no se abre a cualquiera… tienes que demostrar que entiendes el lenguaje del viento.")
+                        println("Encandilado por las posibles recompensas que el santuario pueda tener en su interior, te despides de los viajeros y te lanzas en su busca")
+                        println("Después de días de viaje, llegas a una zona donde el viento parece hablarte con palabras incomprensibles. Frente a ti, hay tres caminos, cada uno con señales talladas en la roca.")
+                        fun opcionesSantuario(personaje: Personaje){
+                            val subOpciones = listOf(
+                                Opcion("Sendero Angosto entre acantilados (Velocidad > ?)"){
+                                    println("El viento es fuerte y el suelo inestable")
+                                    if (personaje.velocidad>15){
+                                        println("Llegas al otro lado sin problemas")
+                                        println("Al final del camino, descubres un antiguo altar de piedra con una inscripción:")
+                                        fun recompensaSanturario(personaje: Personaje){
+                                            println("El altar se abre y revela un arma que parece que porta el poder del viento")
+                                            when (personaje) {
+                                                is Caballero -> {
+                                                    println("Has encontrado una Espada de Viento (+5 Ataque +5 Defensa) y ganas 5 de experiencia")
+                                                    personaje.cambiarArma(Arma("Espada de Viento", bonusAtaque = 5, bonusDefensa = 5))
+                                                    personaje.experiencia+=5
+                                                }
+                                                is Arquero -> {
+                                                    println("Has encontrado un Arco de Viento (+5 Ataque +5 Velocidad) y ganas 5 de experiencia")
+                                                    personaje.cambiarArma(Arma("Arco de Viento", bonusAtaque = 5, bonusVelocidad = 5))
+                                                    personaje.experiencia+=5
+                                                }
+                                                is Mago -> {
+                                                    println("Has encontrado un Bastón de Viento (+5 Ataque, +5 Mana) y ganas 5 de experiencia")
+                                                    personaje.cambiarArma(Arma("Bastón de Viento", bonusAtaque = 5, bonusMana = 5))
+                                                    personaje.experiencia+=5
+                                                }
+                                                is Picaro -> {
+                                                    println("Has encontrado unas Dagas de Viento (+5 Ataque +5 Velocidad) y ganas 5 de experiencia")
+                                                    personaje.cambiarArma(Arma("Dagas de Viento", bonusAtaque = 5, bonusVelocidad = 5))
+                                                    personaje.experiencia+=5
+                                                }
+                                                else -> println("No encuentras nada útil para tu clase.")
+
+                                            }
+                                        }
+                                        fun opcionesAltar(personaje: Personaje){
+                                            val subOpciones = listOf(
+                                                Opcion("Soplar sobre el altar (Mago o maná > ?)"){
+                                                    if (personaje is Mago || personaje.mana > 15){
+                                                        recompensaSanturario(personaje)
+                                                    } else {
+                                                        println("No ocurre nada. Te vas por donde has venido ya que no eres capaz de activar el altar")
+                                                    }
+                                                },
+                                                Opcion("Leer la inscripción"){
+                                                    println("No me ves, pero me sientes, viajo lejos sin detenerme.\nSilbo historias en las cumbres, y en tormentas suelo alzarte.\n¿Qué soy?")
+                                                    println("Contagiado por una extraña sensación, te decides a pronunciar una palabra en alto:")
+                                                    val solucion = readln()
+                                                    if (solucion.lowercase()=="viento" || solucion.lowercase()=="el viento" || solucion.lowercase()=="elviento"){
+                                                        recompensaSanturario(personaje)
+                                                    } else{
+                                                        println("Tan pronto pronuncias $solucion, una gran ráfaga de viento te empuja lejos del santuario")
+                                                    }
+                                                },
+                                                Opcion("Forzar el altar (ataque > ?)"){
+                                                    if (personaje.ataque > 20){
+                                                        recompensaSanturario(personaje)
+                                                    } else {
+                                                        println("No consigues activar el altar y activas una trampa")
+                                                        println("Pierdes 2 de vida")
+                                                        personaje.vida -= 2
+                                                    }
+                                                },
+                                            )
+                                            subOpciones.forEachIndexed { index, opcion ->
+                                                println("${index + 1}. ${opcion.descripcion}")
+                                            }
+                                            println("Selecciona una opción:")
+                                            val opcionSeleccionada = readLine()?.toIntOrNull() ?: 1
+                                            subOpciones[opcionSeleccionada - 1].accion(personaje)
+                                        }
+                                        opcionesAltar(personaje)
+                                    } else{
+                                        println("Un fuerte golpe de viento te hace perder el equilibrio, aunque consigues avanzar")
+                                        println("Pierdes 5 de vida")
+                                        personaje.vida -= 5
+                                    }
+                                },
+                                Opcion("Cueva oscura con extrañas corrientes de aire (Maná > ?)"){
+                                    println("Dentro, el viento forma silbidos inquietantes. Hay inscripciones en las paredes.")
+                                    if (personaje.mana>15){
+                                        println("Eres capaz de leer los glifos y encuentras una sala secreta con un cofre, que contiene 20 monedas")
+                                        println("Ganas 20 monedas y 5 de experiencia")
+                                        personaje.monedas += 20
+                                        personaje.experiencia += 5
+                                    } else{
+                                        println("No eres capaz de leer los glifos y avanzas a ciegas")
+                                        if (Random.nextBoolean()) {
+                                            println("Activas una trampa y huyes del lugar")
+                                            println("Pierdes 5 de vida")
+                                            personaje.vida += 5
+                                        } else {
+                                            println("No encuentras nada, así que te vas del lugar")
+                                        }
+                                    }
+                                },
+                                Opcion("Puente de piedra que cruza un abismo (Ataque > ?)"){
+                                    println("El puente está agrietado, y el viento sopla mucha fuerza.")
+                                    if (personaje.ataque>15){
+                                        println("Llegas al otro lado sin problemas. Te encuentras a un pícaro que también estaba buscando el tesoro. Te ataca tan pronto entabla contacto visual")
+                                        val bandido = Enemigo("Pícaro ladrón", vida = 15, ataque = 8, defensa = 3, velocidad = 10)
+                                        val batalla = Batalla(personaje, bandido)
+                                        batalla.iniciar()
+                                        personaje.experiencia += 2
+                                        personaje.monedas += 10
+                                        println("Derrotas sin problema al pícaro, consigues 2 de experiencia y 10 monedas")
+                                        println("Exploras la zona pero no encuentras nada. Al menos pudiste conseguir botín del pícaro")
+                                    } else{
+                                        println("Tan pronto das el primer paso, el puente se derrumba. No puedes continuar y abandonas el lugar")
+                                        println("Pierdes 5 de vida")
+                                        personaje.vida -= 5
+                                    }
+                                },
+                                Opcion("Abandonar la zona"){
+                                    println("No te sientes preparado para afrontar los desafíos, pero tienes la sensación de haber esquivado la muerte")
+                                }
+                            )
+                            subOpciones.forEachIndexed { index, opcion ->
+                                println("${index + 1}. ${opcion.descripcion}")
+                            }
+                            println("Selecciona una opción:")
+                            val opcionSeleccionada = readLine()?.toIntOrNull() ?: 1
+                            subOpciones[opcionSeleccionada - 1].accion(personaje)
+                        }
+                        opcionesSantuario(personaje)
                     },
                     Opcion("Desafiar a uno a un pulso") {
                         println("Desafías a x, el mas fuerte a un pulso. Su aspecto es muy fuerte, pero te arriesgas a realizar una apuesta")
