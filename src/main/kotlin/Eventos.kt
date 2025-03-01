@@ -8,10 +8,10 @@ val eventoMercaderSospechoso = Evento(
             if (personaje.monedas >= 5) {
                 personaje.monedas -= 5
                 if (Random.nextBoolean()) {
-                    println("Has recibido una Poción de Vida (+10 HP)")
+                    println("Has recibido una Poción de Vida, ganas 2 de vida")
                     personaje.vida += 2
                 } else {
-                    println("Has recibido una Poción Envenenada (-5 HP)")
+                    println("Has recibido una Poción Envenenada, pierdes 2 de vida")
                     personaje.vida -= 2
                 }
             } else {
@@ -21,21 +21,20 @@ val eventoMercaderSospechoso = Evento(
         Opcion("No comprarla") {
             println("Sigues tu camino sin comprar nada.")
         },
-        Opcion("Amenazarlo") { personaje ->
+        Opcion("Amenazarlo (ataque > ?)") { personaje ->
             if (personaje.ataque>10) {
-                println("El mercader se siente amenazado y te da la poción gratis.")
-                if (Random.nextBoolean()) {
-                    println("Has recibido una Poción de Vida (+10 HP)")
+                println("El mercader se siente amenazado y te una poción de vida gratis.")
+                    println("Has recibido una Poción de Vida, ganas 2 de vida")
                     personaje.vida += 2
-                } else {
-                    println("Has recibido una Poción Envenenada (-5 HP)")
-                    personaje.vida -= 2
-                }
             } else {
                 println("El mercader no se siente amenazado y te ataca")
                 val mercader = Enemigo("Mercader", vida = 20, ataque = 5, defensa = 3, velocidad = 4)
                 val batalla = Batalla(personaje, mercader)
                 batalla.iniciar()
+                println("Derrotas al mercader y este huye despavorido. Deja caer unas monedas.")
+                println("Ganas 2 monedas y 2 de experiencia")
+                personaje.experiencia += 2
+                personaje.monedas += 2
             }
         }
     )
@@ -45,24 +44,28 @@ val eventoCofreOxidado = Evento(
     titulo = "El Cofre Oxidado",
     descripcion = "Encuentras un viejo cofre en el bosque cubierto de musgo y óxido. Parece frágil, pero podría contener algo útil.",
     opciones = listOf(
-        Opcion("Abrirlo con cuidado") { personaje ->
-            if (personaje.velocidad >= 6){
+        Opcion("Abrirlo con cuidado (Picaro o velocidad > ?)") { personaje ->
+            if (personaje is Picaro || personaje.velocidad >= 7){
                 when (personaje) {
                     is Caballero -> {
-                        println("Has encontrado una Espada de Madera Mejorada (+2 Ataque +2 Defensa).")
+                        println("Has encontrado una Espada de Madera Mejorada (+2 Ataque +2 Defensa). Ganas 2 de experiencia.")
                         personaje.cambiarArma(Arma("Espada de Madera Mejorada", bonusAtaque = 2, bonusDefensa = 2))
+                        personaje.experiencia += 2
                     }
                     is Arquero -> {
-                        println("Has encontrado un Arco Tallado (+3 Ataque +1 Velocidad).")
+                        println("Has encontrado un Arco Tallado (+3 Ataque +1 Velocidad). Ganas 2 de experiencia.")
                         personaje.cambiarArma(Arma("Arco Tallado", bonusAtaque = 3, bonusVelocidad = 1))
+                        personaje.experiencia += 2
                     }
                     is Mago -> {
-                        println("Has encontrado un Bastón de Roble (+2 Ataque, +2 Mana).")
+                        println("Has encontrado un Bastón de Roble (+2 Ataque, +2 Mana). Ganas 2 de experiencia.")
                         personaje.cambiarArma(Arma("Bastón de Roble", bonusAtaque = 2, bonusMana = 2))
+                        personaje.experiencia += 2
                     }
                     is Picaro -> {
-                        println("Has encontrado unas Dagas de Madera (+1 Ataque +3 Velocidad).")
+                        println("Has encontrado unas Dagas de Madera (+1 Ataque +3 Velocidad). Ganas 2 de experiencia.")
                         personaje.cambiarArma(Arma("Dagas de Madera", bonusAtaque = 1, bonusVelocidad = 3))
+                        personaje.experiencia += 2
                     }
                     else -> println("No encuentras nada útil para tu clase.")
 
@@ -72,9 +75,36 @@ val eventoCofreOxidado = Evento(
             }
 
         },
-        Opcion("Forzarlo") { personaje ->
-            println("¡Se activa una trampa! Pierdes 3 puntos de vida.")
-            personaje.vida -= 3
+        Opcion("Forzarlo (ataque > 10)") { personaje ->
+            if (personaje.ataque>10){
+                when (personaje) {
+                    is Caballero -> {
+                        println("Has encontrado una Espada de Madera Mejorada (+2 Ataque +2 Defensa). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Espada de Madera Mejorada", bonusAtaque = 2, bonusDefensa = 2))
+                        personaje.experiencia += 2
+                    }
+                    is Arquero -> {
+                        println("Has encontrado un Arco Tallado (+3 Ataque +1 Velocidad). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Arco Tallado", bonusAtaque = 3, bonusVelocidad = 1))
+                        personaje.experiencia += 2
+                    }
+                    is Mago -> {
+                        println("Has encontrado un Bastón de Roble (+2 Ataque, +2 Mana). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Bastón de Roble", bonusAtaque = 2, bonusMana = 2))
+                        personaje.experiencia += 2
+                    }
+                    is Picaro -> {
+                        println("Has encontrado unas Dagas de Madera (+1 Ataque +3 Velocidad). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Dagas de Madera", bonusAtaque = 1, bonusVelocidad = 3))
+                        personaje.experiencia += 2
+                    }
+                    else -> println("No encuentras nada útil para tu clase.")
+
+                }
+            } else {
+                println("¡Se activa una trampa! Pierdes 3 puntos de vida.")
+                personaje.vida -= 2
+            }
         },
         Opcion("Ignorarlo") {
             println("Decides ignorar el cofre y seguir tu camino.")
@@ -95,7 +125,7 @@ val posadaBrisavento = Evento (
                         personaje.monedas -= 5
                         personaje.vida += 5
                     },
-                    Opcion("Negociar") {
+                    Opcion("Negociar (Maná > ?)") {
                         if (personaje.mana > 10) {
                             println("Consigues dormir gratis")
                             personaje.vida += 5
@@ -125,11 +155,11 @@ val posadaBrisavento = Evento (
                     Opcion("El mercader te ofrece un amuleto de la suerte"){
                         //Falta
                     },
-                    Opcion("Robar al mercader") {
+                    Opcion("Robar al mercader (Picaro o velocidad > ?)") {
                         if (personaje is Picaro || personaje.velocidad > 10) {
                             println("Robas una poción de vida y 5 monedas")
                             personaje.monedas += 5
-                            // Aquí falta la lógica para añadir la poción de vida
+                            personaje.vida += 2
                         } else {
                             println("Fallas el robo y el mercader te desafía a un duelo")
                             val mercader = Enemigo("Mercader Misterioso", vida = 25, ataque = 8, defensa = 3, velocidad = 6)
@@ -294,7 +324,7 @@ val posadaBrisavento = Evento (
                         }
                         opcionesSantuario(personaje)
                     },
-                    Opcion("Desafiar a uno a un pulso") {
+                    Opcion("Desafiar a uno a un pulso (ataque > ?)") {
                         println("Desafías a x, el mas fuerte a un pulso. Su aspecto es muy fuerte, pero te arriesgas a realizar una apuesta")
                         if (personaje.ataque>8){
                             println("Ganas el pulso sin apenas esfuerzo. X queda sorprendido y ganas la apuesta")
