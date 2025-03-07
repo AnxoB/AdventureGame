@@ -19,11 +19,20 @@ class Evento(
         }
     }
 
-    fun tomarDecision(indice: Int, personaje: Personaje) {
-        if (indice in 1..opciones.size) {
-            opciones[indice - 1].accion(personaje)
-        } else {
-            println("Opción no válida")
+    fun tomarDecision(personaje: Personaje) {
+        var opcionValida = false
+        while (!opcionValida) {
+            println("Selecciona una opción:")
+            val indice = readLine()?.toIntOrNull() ?: 0
+            if (indice in 1..opciones.size) {
+                opciones[indice - 1].accion(personaje)
+                opcionValida = true
+            } else {
+                println("Opción no válida, por favor introduce un valor correcto")
+                opciones.forEachIndexed { index, opcion ->
+                    println("${index + 1}. ${opcion.descripcion}")
+                }
+            }
         }
     }
 }
