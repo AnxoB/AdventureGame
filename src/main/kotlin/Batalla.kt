@@ -43,7 +43,7 @@ class Batalla(
 
     private fun turno(atacante: Any, defensor: Any) {
         val (nombreAtacante, ataque, velocidadAtacante) = when (atacante) {
-            is Personaje -> Triple(atacante.nombre, atacante.ataque, atacante.velocidad)
+            is Personaje -> Triple(atacante.nombre, atacante.fuerza, atacante.velocidad)
             is Enemigo -> Triple(atacante.nombre, atacante.ataque, atacante.velocidad)
             else -> throw IllegalArgumentException("Atacante desconocido")
         }

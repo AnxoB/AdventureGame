@@ -40,11 +40,12 @@ val eventoMercaderSospechoso = Evento(
                 println("No tienes suficientes monedas")
             }
         },
-        Opcion("No comprarla") {
+        Opcion("No comprarla") { personaje ->
             println("Sigues tu camino sin comprar nada.")
+            personaje.ganarExperiencia(20)
         },
-        Opcion("Amenazarlo (ataque > ?)") { personaje ->
-            if (personaje.ataque>10) {
+        Opcion("Amenazarlo (fuerza > ?)") { personaje ->
+            if (personaje.fuerza>10) {
                 println("El mercader se siente amenazado y te una poción de vida gratis.")
                     println("Has recibido una Poción de Vida, ganas 2 de vida")
                     personaje.vida += 2
@@ -55,7 +56,7 @@ val eventoMercaderSospechoso = Evento(
                 batalla.iniciar()
                 println("Derrotas al mercader y este huye despavorido. Deja caer unas monedas.")
                 println("Ganas 2 monedas y 2 de experiencia")
-                personaje.experiencia += 2
+                personaje.ganarExperiencia(2)
                 personaje.monedas += 2
             }
         }
@@ -70,24 +71,24 @@ val eventoCofreOxidado = Evento(
             if (personaje is Picaro || personaje.velocidad >= 7){
                 when (personaje) {
                     is Caballero -> {
-                        println("Has encontrado una Espada de Madera Mejorada (+2 Ataque +2 Defensa). Ganas 2 de experiencia.")
-                        personaje.cambiarArma(Arma("Espada de Madera Mejorada", bonusAtaque = 2, bonusDefensa = 2))
-                        personaje.experiencia += 2
+                        println("Has encontrado una Espada de Madera Mejorada (+2 fuerza +2 Defensa). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Espada de Madera Mejorada", bonusFuerza = 2, bonusDefensa = 2))
+                        personaje.ganarExperiencia(2)
                     }
                     is Arquero -> {
-                        println("Has encontrado un Arco Tallado (+3 Ataque +1 Velocidad). Ganas 2 de experiencia.")
-                        personaje.cambiarArma(Arma("Arco Tallado", bonusAtaque = 3, bonusVelocidad = 1))
-                        personaje.experiencia += 2
+                        println("Has encontrado un Arco Tallado (+3 fuerza +1 Velocidad). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Arco Tallado", bonusFuerza = 3, bonusVelocidad = 1))
+                        personaje.ganarExperiencia(2)
                     }
                     is Mago -> {
-                        println("Has encontrado un Bastón de Roble (+2 Ataque, +2 Mana). Ganas 2 de experiencia.")
-                        personaje.cambiarArma(Arma("Bastón de Roble", bonusAtaque = 2, bonusMana = 2))
-                        personaje.experiencia += 2
+                        println("Has encontrado un Bastón de Roble (+2 fuerza, +2 Mana). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Bastón de Roble", bonusFuerza = 2, bonusMagia = 2))
+                        personaje.ganarExperiencia(2)
                     }
                     is Picaro -> {
-                        println("Has encontrado unas Dagas de Madera (+1 Ataque +3 Velocidad). Ganas 2 de experiencia.")
-                        personaje.cambiarArma(Arma("Dagas de Madera", bonusAtaque = 1, bonusVelocidad = 3))
-                        personaje.experiencia += 2
+                        println("Has encontrado unas Dagas de Madera (+1 fuerza +3 Velocidad). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Dagas de Madera", bonusFuerza = 1, bonusVelocidad = 3))
+                        personaje.ganarExperiencia(2)
                     }
                     else -> println("No encuentras nada útil para tu clase.")
 
@@ -97,28 +98,28 @@ val eventoCofreOxidado = Evento(
             }
 
         },
-        Opcion("Forzarlo (ataque > 10)") { personaje ->
-            if (personaje.ataque>10){
+        Opcion("Forzarlo (fuerza > 10)") { personaje ->
+            if (personaje.fuerza>10){
                 when (personaje) {
                     is Caballero -> {
-                        println("Has encontrado una Espada de Madera Mejorada (+2 Ataque +2 Defensa). Ganas 2 de experiencia.")
-                        personaje.cambiarArma(Arma("Espada de Madera Mejorada", bonusAtaque = 2, bonusDefensa = 2))
-                        personaje.experiencia += 2
+                        println("Has encontrado una Espada de Madera Mejorada (+2 fuerza +2 Defensa). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Espada de Madera Mejorada", bonusFuerza = 2, bonusDefensa = 2))
+                        personaje.ganarExperiencia(2)
                     }
                     is Arquero -> {
-                        println("Has encontrado un Arco Tallado (+3 Ataque +1 Velocidad). Ganas 2 de experiencia.")
-                        personaje.cambiarArma(Arma("Arco Tallado", bonusAtaque = 3, bonusVelocidad = 1))
-                        personaje.experiencia += 2
+                        println("Has encontrado un Arco Tallado (+3 fuerza +1 Velocidad). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Arco Tallado", bonusFuerza = 3, bonusVelocidad = 1))
+                        personaje.ganarExperiencia(2)
                     }
                     is Mago -> {
-                        println("Has encontrado un Bastón de Roble (+2 Ataque, +2 Mana). Ganas 2 de experiencia.")
-                        personaje.cambiarArma(Arma("Bastón de Roble", bonusAtaque = 2, bonusMana = 2))
-                        personaje.experiencia += 2
+                        println("Has encontrado un Bastón de Roble (+2 fuerza, +2 Mana). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Bastón de Roble", bonusFuerza = 2, bonusMagia = 2))
+                        personaje.ganarExperiencia(2)
                     }
                     is Picaro -> {
-                        println("Has encontrado unas Dagas de Madera (+1 Ataque +3 Velocidad). Ganas 2 de experiencia.")
-                        personaje.cambiarArma(Arma("Dagas de Madera", bonusAtaque = 1, bonusVelocidad = 3))
-                        personaje.experiencia += 2
+                        println("Has encontrado unas Dagas de Madera (+1 fuerza +3 Velocidad). Ganas 2 de experiencia.")
+                        personaje.cambiarArma(Arma("Dagas de Madera", bonusFuerza = 1, bonusVelocidad = 3))
+                        personaje.ganarExperiencia(2)
                     }
                     else -> println("No encuentras nada útil para tu clase.")
 
@@ -183,12 +184,12 @@ fun opcionesCharla(personaje: Personaje) {
 
             opcionesSantuario(personaje)
         },
-        Opcion("Desafiar a uno a un pulso (ataque > 8)") {
+        Opcion("Desafiar a uno a un pulso (fuerza > 8)") {
             println("Desafías a un aventurero a un pulso. Su aspecto es muy fuerte, pero te arriesgas a realizar una apuesta")
-            if (personaje.ataque > 8) {
+            if (personaje.fuerza > 8) {
                 println("Ganas el pulso sin apenas esfuerzo. Ganas 3 monedas y 2 de experiencia")
                 personaje.monedas += 3
-                personaje.experiencia += 2
+                personaje.ganarExperiencia(2)
             } else {
                 println("Pierdes el pulso y quedas en ridículo. Pierdes 2 de vida")
                 personaje.vida -= 2
@@ -199,7 +200,7 @@ fun opcionesCharla(personaje: Personaje) {
             println("Ganas 2 de vida, pierdes 3 monedas y ganas 2 de experiencia")
             personaje.monedas -= 3
             personaje.vida += 2
-            personaje.experiencia += 2
+            personaje.ganarExperiencia(2)
         }
     )
     mostrarOpcionesYSeleccionar(subOpciones, personaje)
@@ -212,7 +213,7 @@ fun opcionesPuerta(personaje: Personaje) {
                 println("Te cuelas en la habitación exitosamente. No hay nadie, así que cierras la puerta y aprovechas para descansar")
                 println("Ganas 2 de vida y 2 de experiencia")
                 personaje.vida += 2
-                personaje.experiencia += 2
+                personaje.ganarExperiencia(2)
             } else {
                 println("No eres capaz de abrir la puerta y el tabernero te descubre. Te echan de la posada")
                 println("Pierdes 2 de vida")
@@ -224,27 +225,27 @@ fun opcionesPuerta(personaje: Personaje) {
                 when (personaje) {
                     is Picaro -> {
                         println("Te encuentras con un pícaro durmiendo y ves una reluciente daga de hierro a su lado")
-                        println("Consigues una daga de hierro (3 de ataque y 3 de velocidad) y 2 de experiencia")
-                        personaje.cambiarArma(Arma("Daga de hierro", bonusAtaque = 3, bonusVelocidad = 3))
-                        personaje.experiencia += 2
+                        println("Consigues una daga de hierro (3 de fuerza y 3 de velocidad) y 2 de experiencia")
+                        personaje.cambiarArma(Arma("Daga de hierro", bonusFuerza = 3, bonusVelocidad = 3))
+                        personaje.ganarExperiencia(2)
                     }
                     is Mago -> {
                         println("Te encuentras con un mago durmiendo y ves un reluciente báculo de hierro a su lado")
-                        println("Consigues un báculo de hierro (3 de ataque y 3 de maná) y 2 de experiencia")
-                        personaje.cambiarArma(Arma("Báculo de hierro", bonusAtaque = 3, bonusMana = 3))
-                        personaje.experiencia += 2
+                        println("Consigues un báculo de hierro (3 de fuerza y 3 de maná) y 2 de experiencia")
+                        personaje.cambiarArma(Arma("Báculo de hierro", bonusFuerza = 3, bonusMagia = 3))
+                        personaje.ganarExperiencia(2)
                     }
                     is Caballero -> {
                         println("Te encuentras con un caballero durmiendo y ves una reluciente espada de hierro a su lado")
-                        println("Consigues una espada de hierro (3 de ataque y 3 de defensa) y 2 de experiencia")
-                        personaje.cambiarArma(Arma("Espada de hierro", bonusAtaque = 3, bonusDefensa = 3))
-                        personaje.experiencia += 2
+                        println("Consigues una espada de hierro (3 de fuerza y 3 de defensa) y 2 de experiencia")
+                        personaje.cambiarArma(Arma("Espada de hierro", bonusFuerza = 3, bonusDefensa = 3))
+                        personaje.ganarExperiencia(2)
                     }
                     is Arquero -> {
                         println("Te encuentras con un arquero durmiendo y ves un reluciente arco de hierro a su lado")
-                        println("Consigues un arco de hierro (3 de ataque y 3 de velocidad) y 2 de experiencia")
-                        personaje.cambiarArma(Arma("Arco de hierro", bonusAtaque = 3, bonusVelocidad = 3))
-                        personaje.experiencia += 2
+                        println("Consigues un arco de hierro (3 de fuerza y 3 de velocidad) y 2 de experiencia")
+                        personaje.cambiarArma(Arma("Arco de hierro", bonusFuerza = 3, bonusVelocidad = 3))
+                        personaje.ganarExperiencia(2)
                     }
                 }
             } else {
@@ -252,9 +253,9 @@ fun opcionesPuerta(personaje: Personaje) {
                 val caballero = Enemigo("Caballero Somnoliento", vida = 25, ataque = 10, defensa = 8, velocidad = 4)
                 val batalla = Batalla(personaje, caballero)
                 batalla.iniciar()
-                println("Consigues resistir lo ataques del caballero y huyes de la posada")
+                println("Consigues resistir los ataques del caballero y huyes de la posada")
                 println("Ganas 2 de experiencia")
-                personaje.experiencia += 2
+                personaje.ganarExperiencia(2)
             }
         },
         Opcion("Irse de la posada") {
@@ -268,24 +269,24 @@ fun recompensaSanturario(personaje: Personaje) {
     println("El altar se abre y revela un arma que parece que porta el poder del viento")
     when (personaje) {
         is Caballero -> {
-            println("Has encontrado una Espada de Viento (+5 Ataque +5 Defensa) y ganas 5 de experiencia")
-            personaje.cambiarArma(Arma("Espada de Viento", bonusAtaque = 5, bonusDefensa = 5))
-            personaje.experiencia += 5
+            println("Has encontrado una Espada de Viento (+5 fuerza +5 Defensa) y ganas 5 de experiencia")
+            personaje.cambiarArma(Arma("Espada de Viento", bonusFuerza = 5, bonusDefensa = 5))
+            personaje.ganarExperiencia(5)
         }
         is Arquero -> {
-            println("Has encontrado un Arco de Viento (+5 Ataque +5 Velocidad) y ganas 5 de experiencia")
-            personaje.cambiarArma(Arma("Arco de Viento", bonusAtaque = 5, bonusVelocidad = 5))
-            personaje.experiencia += 5
+            println("Has encontrado un Arco de Viento (+5 fuerza +5 Velocidad) y ganas 5 de experiencia")
+            personaje.cambiarArma(Arma("Arco de Viento", bonusFuerza = 5, bonusVelocidad = 5))
+            personaje.ganarExperiencia(5)
         }
         is Mago -> {
-            println("Has encontrado un Bastón de Viento (+5 Ataque, +5 Mana) y ganas 5 de experiencia")
-            personaje.cambiarArma(Arma("Bastón de Viento", bonusAtaque = 5, bonusMana = 5))
-            personaje.experiencia += 5
+            println("Has encontrado un Bastón de Viento (+5 fuerza, +5 Mana) y ganas 5 de experiencia")
+            personaje.cambiarArma(Arma("Bastón de Viento", bonusFuerza = 5, bonusMagia = 5))
+            personaje.ganarExperiencia(5)
         }
         is Picaro -> {
-            println("Has encontrado unas Dagas de Viento (+5 Ataque +5 Velocidad) y ganas 5 de experiencia")
-            personaje.cambiarArma(Arma("Dagas de Viento", bonusAtaque = 5, bonusVelocidad = 5))
-            personaje.experiencia += 5
+            println("Has encontrado unas Dagas de Viento (+5 fuerza +5 Velocidad) y ganas 5 de experiencia")
+            personaje.cambiarArma(Arma("Dagas de Viento", bonusFuerza = 5, bonusVelocidad = 5))
+            personaje.ganarExperiencia(5)
         }
         else -> println("No encuentras nada útil para tu clase.")
     }
@@ -294,7 +295,7 @@ fun recompensaSanturario(personaje: Personaje) {
 fun opcionesAltar(personaje: Personaje) {
     val subOpciones = listOf(
         Opcion("Soplar sobre el altar (Mago o maná > 15)") {
-            if (personaje is Mago || personaje.mana > 15) {
+            if (personaje is Mago || personaje.magia > 15) {
                 recompensaSanturario(personaje)
             } else {
                 println("No ocurre nada. Te vas por donde has venido ya que no eres capaz de activar el altar")
@@ -312,8 +313,8 @@ fun opcionesAltar(personaje: Personaje) {
                 println("Pierdes 2 de vida")
             }
         },
-        Opcion("Forzar el altar (ataque > 20)") {
-            if (personaje.ataque > 20) {
+        Opcion("Forzar el altar (fuerza > ?)") {
+            if (personaje.fuerza > 20) {
                 recompensaSanturario(personaje)
             } else {
                 println("No consigues activar el altar y activas una trampa")
@@ -342,11 +343,11 @@ fun opcionesSantuario(personaje: Personaje) {
         },
         Opcion("Cueva oscura con extrañas corrientes de aire (Maná > 15)") {
             println("Dentro, el viento forma silbidos inquietantes. Hay inscripciones en las paredes.")
-            if (personaje.mana > 15) {
+            if (personaje.magia > 15) {
                 println("Eres capaz de leer los glifos y encuentras una sala secreta con un cofre, que contiene 20 monedas")
                 println("Ganas 20 monedas y 5 de experiencia")
                 personaje.monedas += 20
-                personaje.experiencia += 5
+                personaje.ganarExperiencia(5)
             } else {
                 println("No eres capaz de leer los glifos y avanzas a ciegas")
                 if (Random.nextBoolean()) {
@@ -358,14 +359,14 @@ fun opcionesSantuario(personaje: Personaje) {
                 }
             }
         },
-        Opcion("Puente de piedra que cruza un abismo (Ataque > 15)") {
+        Opcion("Puente de piedra que cruza un abismo (fuerza > 15)") {
             println("El puente está agrietado, y el viento sopla con mucha fuerza.")
-            if (personaje.ataque > 15) {
+            if (personaje.fuerza > 15) {
                 println("Llegas al otro lado sin problemas. Te encuentras a un pícaro que también estaba buscando el tesoro. Te ataca tan pronto entabla contacto visual")
                 val bandido = Enemigo("Pícaro ladrón", vida = 15, ataque = 8, defensa = 3, velocidad = 10)
                 val batalla = Batalla(personaje, bandido)
                 batalla.iniciar()
-                personaje.experiencia += 2
+                personaje.ganarExperiencia(2)
                 personaje.monedas += 10
                 println("Derrotas sin problema al pícaro, consigues 2 de experiencia y 10 monedas")
                 println("Exploras la zona pero no encuentras nada. Al menos pudiste conseguir botín del pícaro")
@@ -397,7 +398,7 @@ fun opcionesMercaderMisterioso(personaje: Personaje) {
                 val mercader = Enemigo("Mercader Misterioso", vida = 25, ataque = 8, defensa = 3, velocidad = 6)
                 val batalla = Batalla(personaje, mercader)
                 batalla.iniciar()
-                personaje.experiencia += 2
+                personaje.ganarExperiencia(2)
                 personaje.monedas += 2
                 println("Derrotas al mercader, consigues 2 de experiencia y 2 monedas")
             }
@@ -420,7 +421,7 @@ fun opcionesPosadero(personaje: Personaje) {
             personaje.vida += 5
         },
         Opcion("Negociar (Maná > 10)") {
-            if (personaje.mana > 10) {
+            if (personaje.magia > 10) {
                 println("Consigues dormir gratis")
                 personaje.vida += 5
             } else {

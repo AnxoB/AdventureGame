@@ -3,10 +3,11 @@ import kotlin.random.Random
 open class Personaje(
     val nombre: String,
     var vida: Int,
-    var ataque: Int,
+    var fuerza: Int,
+    var destreza: Int,
     var defensa: Int,
     var velocidad: Int,
-    var mana: Int,
+    var magia: Int,
     var arma: Arma,
     var monedas: Int = 5
 ) {
@@ -17,10 +18,11 @@ open class Personaje(
 
     init {
         vida += arma.bonusVida
-        ataque += arma.bonusAtaque
+        fuerza += arma.bonusFuerza
+        destreza += arma.bonusDestreza
         defensa += arma.bonusDefensa
         velocidad += arma.bonusVelocidad
-        mana += arma.bonusMana
+        magia += arma.bonusMagia
     }
 
     open fun mejorarEstadisticas() {
@@ -30,10 +32,11 @@ open class Personaje(
     fun mostrarEstadisticas() {
         println("Nombre: $nombre")
         println("Vida: $vida")
-        println("Ataque: $ataque")
+        println("Fuerza: $fuerza")
+        println("Destreza: $destreza")
         println("Defensa: $defensa")
         println("Velocidad: $velocidad")
-        println("Maná: $mana")
+        println("Maná: $magia")
         println("Arma: ${arma.nombre}")
         println("Nivel: $nivel")
         println("Experiencia: $experiencia / $experienciaNecesaria")
@@ -62,17 +65,19 @@ open class Personaje(
 
     private fun aplicarBonusArma(arma: Arma) {
         vida += arma.bonusVida
-        ataque += arma.bonusAtaque
+        fuerza += arma.bonusFuerza
+        destreza += arma.bonusDestreza
         defensa += arma.bonusDefensa
         velocidad += arma.bonusVelocidad
-        mana += arma.bonusMana
+        magia += arma.bonusMagia
     }
 
     private fun quitarBonusArma(arma: Arma) {
         vida -= arma.bonusVida
-        ataque -= arma.bonusAtaque
+        fuerza -= arma.bonusFuerza
+        destreza -= arma.bonusDestreza
         defensa -= arma.bonusDefensa
         velocidad -= arma.bonusVelocidad
-        mana -= arma.bonusMana
+        magia -= arma.bonusMagia
     }
 }
